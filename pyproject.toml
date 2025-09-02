@@ -1,0 +1,35 @@
+[project]
+name = "danfe-generator"
+version = "1.0.0"
+description = "Gerador de código ZPL para DANFE Simplificado a partir de XML da NFe seguindo Clean Architecture"
+readme = "README.md"
+authors = [
+    { name = "jef-loppes-reis", email = "jefersondip25@gmail.com" }
+]
+requires-python = ">=3.8"
+dependencies = []
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Office/Business :: Financial :: Accounting",
+]
+keywords = ["danfe", "nfe", "zpl", "fiscal", "zebra", "etiqueta"]
+
+[project.urls]
+Homepage = "https://github.com/jef-loppes-reis/danfe-generator"
+Repository = "https://github.com/jef-loppes-reis/danfe-generator"
+Issues = "https://github.com/jef-loppes-reis/danfe-generator/issues"
+
+[build-system]
+requires = ["uv_build>=0.8.14,<0.9.0"]
+build-backend = "uv_build"
