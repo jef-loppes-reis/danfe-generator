@@ -6,7 +6,7 @@ simplificada para o sistema de geração de DANFE seguindo os
 princípios da Clean Architecture.
 """
 
-from typing import Union
+from typing import Union, Optional
 from pathlib import Path
 
 from .domain.entities.danfe import DANFE
@@ -15,6 +15,7 @@ from .use_cases.save_danfe_to_file import SaveDANFEToFileUseCase
 from .adapters.parsers.xml_nfe_parser import XMLNFeParser
 from .adapters.generators.standard_zpl_generator import StandardZPLGenerator
 from .infrastructure.file_system_writer import FileSystemWriter
+from .use_cases.search_file_xml import SearchFileXMLUseCase
 
 
 class DANFEGeneratorFacade:
@@ -39,32 +40,36 @@ class DANFEGeneratorFacade:
     DANFE salva em: minha_danfe.zpl
     """
 
-    def __init__(self, xml_file_path: Union[str, Path]):
+    def __init__(self, xml_file_path: Optional[Union[str, Path]] = None, cod_invoice: Optional[str] = None):
         """
         Inicializa o gerador com o arquivo XML da NFe.
         
         Parameters
         ----------
-        xml_file_path : Union[str, Path]
+        xml_file_path : Optional[Union[str, Path]], optional
             Caminho para o arquivo XML da NFe
-        
+        cod_invoice : Optional[str], optional
+            Código da nota fiscal
         Examples
         --------
         >>> generator = DANFEGeneratorFacade("nfe.xml")
         >>> danfe = generator.generate_danfe()
         """
         self.xml_file_path = xml_file_path
+        self.cod_invoice = cod_invoice
         self._danfe = None
 
         # Inicializa dependências
         self._xml_parser = XMLNFeParser()
         self._zpl_generator = StandardZPLGenerator()
         self._file_writer = FileSystemWriter()
+        self._search_file_xml = SearchFileXMLUseCase()
 
         # Inicializa casos de uso
         self._generate_use_case = GenerateDANFEFromXMLUseCase(
             self._xml_parser,
-            self._zpl_generator
+            self._zpl_generator,
+            self._search_file_xml
         )
         self._save_use_case = SaveDANFEToFileUseCase(self._file_writer)
 
@@ -91,7 +96,7 @@ class DANFEGeneratorFacade:
         >>> print(danfe.get_info_summary())
         NFe 123/1 - Emitente: Empresa LTDA - Destinatário: João Silva
         """
-        self._danfe = self._generate_use_case.execute(self.xml_file_path)
+        self._danfe = self._generate_use_case.execute(self.xml_file_path, self.cod_invoice)
         return self._danfe
 
     def get_zpl_code(self) -> str:

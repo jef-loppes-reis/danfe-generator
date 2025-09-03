@@ -17,7 +17,8 @@ def main():
     """
     try:
         # Cria o gerador com base no XML
-        generator = DANFEGenerator("nfe.xml")
+        generator = DANFEGenerator(xml_file_path="nfe.xml")
+        # generator = DANFEGenerator(cod_invoice="798457")
 
         # Exibe informações extraídas
         generator.print_nfe_info()
