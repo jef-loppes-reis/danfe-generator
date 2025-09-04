@@ -12,6 +12,13 @@ from ..formatters.brazilian_date_formatter import BrazilianDateFormatter
 from ..formatters.brazilian_document_formatter import BrazilianDocumentFormatter
 
 
+class StandardZPLGeneratorConfig:
+    """
+    Configuração para o gerador padrão de código ZPL.
+    """
+    cpf_dest: bool = False
+
+
 class StandardZPLGenerator(ZPLGeneratorInterface):
     """
     Gerador padrão de código ZPL para DANFE.
@@ -31,6 +38,7 @@ class StandardZPLGenerator(ZPLGeneratorInterface):
         """Inicializa o gerador com formatadores padrão."""
         self._date_formatter = BrazilianDateFormatter()
         self._doc_formatter = BrazilianDocumentFormatter()
+        self.config = StandardZPLGeneratorConfig()
 
     def generate(self, nfe_data: NFeData) -> DANFE:
         """
@@ -64,7 +72,7 @@ class StandardZPLGenerator(ZPLGeneratorInterface):
         # Formata dados para exibição
         data_emissao = self._date_formatter.format_date(nfe_data.data_emissao)
         cnpj_formatado = self._doc_formatter.format_cnpj(nfe_data.emitente.cnpj)
-        doc_dest_formatado = self._doc_formatter.format_document(nfe_data.destinatario.documento)
+        doc_dest_formatado = self._doc_formatter.format_document(nfe_data.destinatario.documento) if self.config.cpf_dest else '-'
 
         # Formata protocolo se existir
         protocolo_info = ""
