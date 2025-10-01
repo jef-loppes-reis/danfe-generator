@@ -102,6 +102,8 @@ class FileSystemSearchXML(FileSearchXMLInterface):
                 continue
 
             full_path = str(base_path / filename)
+            # Converte caminho Windows UNC para formato Unix para compatibilidade
+            full_path = full_path.replace('\\', '/')
             try:
                 # Verifica se arquivo existe e tem data de modificação válida
                 if self.get_file_m_datetime(full_path):

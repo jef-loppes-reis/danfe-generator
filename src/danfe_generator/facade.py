@@ -57,7 +57,7 @@ class DANFEGeneratorFacade:
         >>> danfe = generator.generate_danfe()
         """
         self.file_system_search_xml = FileSystemSearchXMLConfig()
-        self.xml_file_path = xml_file_path or self.file_system_search_xml.xml_dir_path
+        self.xml_file_path = xml_file_path
         self.cod_invoice = cod_invoice
         self._danfe = None
 
