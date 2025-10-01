@@ -87,13 +87,22 @@ class GenerateDANFEFromXMLUseCase:
         ^XA^CI28^MCY
         """
         if xml_file_path is None and cod_invoice is not None:
-            search_result = self._search_file_xml.execute(cod_invoice=cod_invoice)
-            if isinstance(search_result, list):
-                xml_file_path = search_result[0] if search_result else None
-            else:
-                xml_file_path = search_result
+            try:
+                search_result = self._search_file_xml.execute(cod_invoice=cod_invoice)
+                if isinstance(search_result, list):
+                    xml_file_path = search_result[0] if search_result else None
+                else:
+                    xml_file_path = search_result
+            except OSError as e:
+                if "Permission denied" in str(e):
+                    raise ValueError(f"Não foi possível acessar o diretório de XMLs. Verifique as permissões de acesso ao diretório de rede. Erro: {e}") from e
+                raise ValueError(f"Erro ao buscar arquivo XML: {e}") from e
+        
         if xml_file_path is None:
+            if cod_invoice:
+                raise ValueError(f"Nenhum arquivo XML encontrado para o código da nota fiscal: {cod_invoice}")
             raise ValueError("Caminho do arquivo XML ou código da nota fiscal não fornecido")
+        
         # Extrai dados da NFe do XML
         nfe_data = self._nfe_parser.parse(xml_file_path)
 

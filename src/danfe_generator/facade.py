@@ -16,6 +16,7 @@ from .adapters.parsers.xml_nfe_parser import XMLNFeParser
 from .adapters.generators.standard_zpl_generator import StandardZPLGenerator
 from .infrastructure.file_system_writer import FileSystemWriter
 from .use_cases.search_file_xml import SearchFileXMLUseCase
+from .infrastructure.file_sytem_search_xml import FileSystemSearchXMLConfig
 
 
 class DANFEGeneratorFacade:
@@ -55,7 +56,8 @@ class DANFEGeneratorFacade:
         >>> generator = DANFEGeneratorFacade("nfe.xml")
         >>> danfe = generator.generate_danfe()
         """
-        self.xml_file_path = xml_file_path
+        self.file_system_search_xml = FileSystemSearchXMLConfig()
+        self.xml_file_path = xml_file_path or self.file_system_search_xml.xml_dir_path
         self.cod_invoice = cod_invoice
         self._danfe = None
 

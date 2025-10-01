@@ -90,6 +90,13 @@ class XMLNFeParser(NFeParserInterface):
             raise ValueError(f"XML malformado: {e}") from e
         except FileNotFoundError as e:
             raise FileNotFoundError(f"Arquivo XML não encontrado: {source}") from e
+        except PermissionError as e:
+            raise ValueError(f"Não foi possível acessar o arquivo XML. Verifique as permissões de acesso. Erro: {e}") from e
+        except OSError as e:
+            if "Permission denied" in str(e):
+                raise ValueError(f"Não foi possível acessar o arquivo XML. Verifique as permissões de acesso. Erro: {e}") from e
+            else:
+                raise ValueError(f"Erro de sistema ao acessar arquivo XML: {e}") from e
         except Exception as e:
             raise ValueError(f"Erro ao processar XML da NFe: {e}") from e
 
